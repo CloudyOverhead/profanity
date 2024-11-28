@@ -51,8 +51,6 @@
 #include "plugins/python_plugins.h"
 #endif
 
-#include "profanity.h"
-#include "common.h"
 #include "command/cmd_defs.h"
 
 static gboolean version = FALSE;
@@ -80,6 +78,10 @@ main(int argc, char** argv)
         { "account", 'a', 0, G_OPTION_ARG_STRING, &account_name, "Auto connect to an account on startup" },
         { "log", 'l', 0, G_OPTION_ARG_STRING, &log, "Set logging levels, DEBUG, INFO, WARN (default), ERROR", "LEVEL" },
         { "config", 'c', 0, G_OPTION_ARG_STRING, &config_file, "Use an alternative configuration file", NULL },
+        { "logfile", 'f', 0, G_OPTION_ARG_STRING, &log_file, "Specify log file", NULL },
+        { "theme", 't', 0, G_OPTION_ARG_STRING, &theme_name, "Specify theme name", NULL },
+        { "logfile", 'f', 0, G_OPTION_ARG_STRING, &log_file, "Specify log file", NULL },
+        { "theme", 't', 0, G_OPTION_ARG_STRING, &theme_name, "Specify theme name", NULL },
         { "logfile", 'f', 0, G_OPTION_ARG_STRING, &log_file, "Specify log file", NULL },
         { "theme", 't', 0, G_OPTION_ARG_STRING, &theme_name, "Specify theme name", NULL },
         { NULL }
