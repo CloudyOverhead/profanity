@@ -55,10 +55,6 @@
 
 static sqlite3* g_chatlog_database;
 
-static void _add_to_db(ProfMessage* message, char* type, const Jid* const from_jid, const Jid* const to_jid);
-static char* _get_db_filename(ProfAccount* account);
-static prof_msg_type_t _get_message_type_type(const char* const type);
-static prof_enc_t _get_message_enc_type(const char* const encstr);
 static int _get_db_version(void);
 static gboolean _migrate_to_v2(void);
 static gboolean _check_available_space_for_db_migration(char* path_to_db);
@@ -101,6 +97,20 @@ log_database_init(ProfAccount* account)
         return FALSE;
     }
 
+    ret = sqlite3_open(filename, &g_chatlog_database);
+    if (ret != SQLITE_OK) {
+        const char* err_msg = sqlite3_errmsg(g_chatlog_database);
+        log_error("Error opening SQLite database: %s", err_msg);
+        return FALSE;
+    }
+
+    ret = sqlite3_open(filename, &g_chatlog_database);
+    if (ret != SQLITE_OK) {
+        const char* err_msg = sqlite3_errmsg(g_chatlog_database);
+        log_error("Error opening SQLite database: %s", err_msg);
+        return FALSE;
+    }
+    
     ret = sqlite3_open(filename, &g_chatlog_database);
     if (ret != SQLITE_OK) {
         const char* err_msg = sqlite3_errmsg(g_chatlog_database);
@@ -153,6 +163,15 @@ log_database_init(ProfAccount* account)
         goto out;
     }
 
+    query = "CREATE TRIGGER IF NOT EXISTS update_corrected_message "
+            "AFTER INSERT ON ChatLogs "
+            "FOR EACH ROW "
+            "WHEN NEW.replaces_db_id IS NOT NULL "
+            "BEGIN "
+            "UPDATE ChatLogs "
+            "SET replaced_by_db_id = NEW.id "
+            "WHERE id = NEW.replaces_db_id; "
+            "END;";
     query = "CREATE TRIGGER IF NOT EXISTS update_corrected_message "
             "AFTER INSERT ON ChatLogs "
             "FOR EACH ROW "
