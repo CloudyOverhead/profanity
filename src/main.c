@@ -43,10 +43,6 @@
 #include "otr/otr.h"
 #endif
 
-#ifdef HAVE_LIBGPGME
-#include "pgp/gpg.h"
-#endif
-
 #ifdef HAVE_PYTHON
 #include "plugins/python_plugins.h"
 #endif
